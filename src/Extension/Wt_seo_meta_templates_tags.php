@@ -15,6 +15,7 @@ namespace Joomla\Plugin\System\Wt_seo_meta_templates_tags\Extension;
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -183,7 +184,9 @@ class Wt_seo_meta_templates_tags extends CMSPlugin
             if (!empty($tag_description)) {
                 (int)$intro_text_max_lenght = $this->params->get('tag_description_text_max_chars', 200);
 
-                $tag_description = OutputFilter::cleanText($tag_description);
+                $tag_description = HTMLHelper::_('content.prepare',$tag_description, '', 'com_content.article');
+                $tag_description = trim(strip_tags(html_entity_decode($tag_description, ENT_QUOTES, 'UTF-8')));
+                $tag_description = str_replace(array("\r\n", "\r", "\n", "\t", '  ', '   '), ' ', $tag_description);
 
                 if ($intro_text_max_lenght > 3) {
                     $intro_text_max_lenght = $intro_text_max_lenght - 3; // For '...' in the end of string
