@@ -107,7 +107,8 @@
             </fieldset>
         </fields>
     </config>
-	<updateservers>
-        <server type="extension" name="WebTolk WT SEO Meta templates - tags">https://web-tolk.ru/component/swjprojects/jupdate.html?element=wt_seo_meta_templates_tags</server>
+    <updateservers>
+        <server type="extension" priority="1" name="WT SEO Meta templates - Tags updates">https://web-tolk.ru/component/swjprojects/jupdate?element=wt_seo_meta_templates_tags</server>
     </updateservers>
+    <changelogurl>https://web-tolk.ru/jchangelog?element=wt_seo_meta_templates_tags</changelogurl>
 </extension>
