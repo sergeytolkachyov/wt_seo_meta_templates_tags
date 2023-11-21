@@ -16,7 +16,7 @@ use Joomla\DI\ServiceProviderInterface;
 use Joomla\Event\DispatcherInterface;
 use Joomla\Plugin\System\Wt_seo_meta_templates_tags\Extension\Wt_seo_meta_templates_tags;
 
-return new class implements ServiceProviderInterface {
+return new class () implements ServiceProviderInterface {
     /**
      * Registers the service provider with a DI container.
      *
