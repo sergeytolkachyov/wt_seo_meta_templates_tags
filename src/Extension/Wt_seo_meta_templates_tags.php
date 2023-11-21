@@ -2,7 +2,7 @@
 /**
  * @package     WT SEO Meta templates
  * @subpackage  WT SEO Meta templates - Tags
- * @version     1.0.0
+ * @version     1.0.1
  * @Author      Sergey Tolkachyov, https://web-tolk.ru
  * @copyright   Copyright (C) 2023 Sergey Tolkachyov
  * @license     GNU/GPL http://www.gnu.org/licenses/gpl-2.0.html
@@ -21,10 +21,10 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Profiler\Profiler;
-use Joomla\Filter\OutputFilter;
+use Joomla\Event\SubscriberInterface;
 use Joomla\Registry\Registry;
 
-class Wt_seo_meta_templates_tags extends CMSPlugin
+final class Wt_seo_meta_templates_tags extends CMSPlugin implements SubscriberInterface
 {
 	/**
 	 * Load the language file on instantiation.
@@ -40,6 +40,23 @@ class Wt_seo_meta_templates_tags extends CMSPlugin
 	 * @since 1.0.0
 	 */
 	protected $show_debug = false;
+	protected $allowLegacyListeners = false;
+
+	/**
+	 * @inheritDoc
+	 *
+	 * @return string[]
+	 *
+	 * @throws \Exception
+	 * @since 4.1.0
+	 *
+	 */
+	public static function getSubscribedEvents(): array
+	{
+		return [
+			'onWt_seo_meta_templatesAddVariables' => 'onWt_seo_meta_templatesAddVariables'
+		];
+	}
 
 	public function __construct(&$subject, $config = [])
 	{
@@ -54,7 +71,7 @@ class Wt_seo_meta_templates_tags extends CMSPlugin
 
 	}
 
-	public function onWt_seo_meta_templatesAddVariables()
+	public function onWt_seo_meta_templatesAddVariables($event) : void
 	{
 
 		!JDEBUG ?: Profiler::getInstance('Application')->mark('<strong>plg WT SEO Meta templates - com_tags provider plugin</strong>: start');
@@ -360,7 +377,8 @@ class Wt_seo_meta_templates_tags extends CMSPlugin
 
 		!JDEBUG ?: Profiler::getInstance('Application')->mark('<strong>plg WT SEO Meta templates - com_tags provider plugin</strong>: Before return data. End.');
 
-		return $data;
+		$event->setArgument('result', $data);
+
 	}
 
 	/**
@@ -403,4 +421,4 @@ class Wt_seo_meta_templates_tags extends CMSPlugin
 			$session->set("wtseometatemplatesdebugoutput", $debug_output);
 		}
 	}
-}//plgSystemWt_seo_meta_templates_content
+}
