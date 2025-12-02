@@ -2,7 +2,7 @@
 /**
  * @package     WT SEO Meta templates
  * @subpackage  WT SEO Meta templates - Tags
- * @version     1.0.1
+ * @version     1.0.2
  * @Author      Sergey Tolkachyov, https://web-tolk.ru
  * @copyright   Copyright (C) 2023 Sergey Tolkachyov
  * @license     GNU/GPL http://www.gnu.org/licenses/gpl-2.0.html
@@ -13,7 +13,7 @@
 namespace Joomla\Plugin\System\Wt_seo_meta_templates_tags\Extension;
 
 // No direct access
-defined('_JEXEC') or die;
+\defined('_JEXEC') or die;
 
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Plugin\CMSPlugin;
@@ -29,7 +29,7 @@ final class Wt_seo_meta_templates_tags extends CMSPlugin implements SubscriberIn
 	/**
 	 * Load the language file on instantiation.
 	 *
-	 * @var  $autoloadLanguage  boolean
+	 * @var  $autoloadLanguage  bool
 	 *
 	 * @since  3.9.0
 	 */
@@ -75,7 +75,7 @@ final class Wt_seo_meta_templates_tags extends CMSPlugin implements SubscriberIn
 	{
 
 		!JDEBUG ?: Profiler::getInstance('Application')->mark('<strong>plg WT SEO Meta templates - com_tags provider plugin</strong>: start');
-		$app    = Factory::getApplication();
+		$app    = $this->getApplication();
 		$option = $app->getInput()->get('option');
 
 		if ($option != 'com_tags')
@@ -83,9 +83,9 @@ final class Wt_seo_meta_templates_tags extends CMSPlugin implements SubscriberIn
 			return;
 		}
 
-		$variables = array();
+		$variables = [];
 		// Titles and meta-descriptiptions array for export to main wt seo meta templates plugin
-		$seo_meta_template = array();
+		$seo_meta_template = [];
 		// Short codes for com_tags category view
 		if ($app->getInput()->get('view') == 'tags')
 		{
@@ -106,8 +106,8 @@ final class Wt_seo_meta_templates_tags extends CMSPlugin implements SubscriberIn
 					->createModel('Tags', 'Site', ['ignore_request' => false]);
 
 				$tags_model->getItems();
-				$title    = Factory::getApplication()->getDocument()->getHeadData()['title'];
-				$metadesc = Factory::getApplication()->getDocument()->getHeadData()['description'];
+				$title    = $app->getDocument()->getHeadData()['title'];
+				$metadesc = $app->getDocument()->getHeadData()['description'];
 				if ($this->show_debug == true)
 				{
 					$this->prepareDebugInfo('', '<p><strong>com_tags area</strong>: tags</p>');
@@ -367,10 +367,10 @@ final class Wt_seo_meta_templates_tags extends CMSPlugin implements SubscriberIn
 			}//pagination
 
 		}
-		$data = array(
+		$data = [
 			'variables'          => $variables,
 			'seo_tags_templates' => $seo_meta_template,
-		);
+		];
 
 
 		$this->prepareDebugInfo('SEO variables', $data);
@@ -388,14 +388,15 @@ final class Wt_seo_meta_templates_tags extends CMSPlugin implements SubscriberIn
 	 * @param $debug_data           string|array
 	 *
 	 * @return void
+	 * @throws \Exception
 	 * @since 1.0.0
 	 */
 	private function prepareDebugInfo($debug_section_header, $debug_data): void
 	{
 
-		if ($this->show_debug == true)
+		if ($this->show_debug)
 		{
-			$session      = Factory::getApplication()->getSession();
+			$session      = $this->getApplication()->getSession();
 			$debug_output = $session->get("wtseometatemplatesdebugoutput");
 			if (!empty($debug_section_header))
 			{

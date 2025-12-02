@@ -7,7 +7,7 @@
  * @link       https://web-tolk.ru
  */
 
-defined('_JEXEC') || die;
+\defined('_JEXEC') || die;
 
 use Joomla\CMS\Extension\PluginInterface;
 use Joomla\CMS\Plugin\PluginHelper;

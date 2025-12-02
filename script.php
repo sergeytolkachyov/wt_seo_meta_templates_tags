@@ -1,7 +1,7 @@
 <?php
 /**
  * @package       WT SEO Meta templates
- * @version       1.0.1
+ * @version       1.0.2
  * @Author        Sergey Tolkachyov, https://web-tolk.ru
  * @copyright     Copyright (C) 2023 Sergey Tolkachyov
  * @license       GNU/GPL http://www.gnu.org/licenses/gpl-3.0.html
@@ -14,6 +14,7 @@ use Joomla\CMS\Application\AdministratorApplication;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Installer\InstallerAdapter;
 use Joomla\CMS\Installer\InstallerScriptInterface;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Version;
 use Joomla\Database\DatabaseDriver;
 use Joomla\DI\Container;
@@ -129,7 +130,7 @@ return new class () implements ServiceProviderInterface {
 			 */
 			public function preflight($type, $adapter) : bool
 			{
-				if (!file_exists(JPATH_SITE . '/plugins/system/wt_seo_meta_templates/wt_seo_meta_templates.xml'))
+				if ($type === 'install' && !file_exists(JPATH_SITE . '/plugins/system/wt_seo_meta_templates/wt_seo_meta_templates.xml'))
 				{
 					$this->app->enqueueMessage('<strong>WT SEO Meta templates - content:</strong> Please, install WT SEO Meta templates plugin first', 'warning');
 					return false;
@@ -150,6 +151,46 @@ return new class () implements ServiceProviderInterface {
 			 */
 			public function postflight(string $type, InstallerAdapter $adapter): bool
 			{
+				$smile = '';
+
+				if ($type !== 'uninstall') {
+					if ($type != 'uninstall') {
+						$smiles = ['&#9786;', '&#128512;', '&#128521;', '&#128525;', '&#128526;', '&#128522;', '&#128591;'];
+						$smile_key = array_rand($smiles, 1);
+						$smile = $smiles[$smile_key];
+					}
+				} else {
+					$smile = ':(';
+				}
+
+				$element = 'PLG_' . strtoupper($adapter->getElement());
+				$type = strtoupper($type);
+
+				$html = '
+				<div class="row m-0">
+				<div class="col-12 col-md-8 p-0 pe-2">
+				<h2>' . $smile . ' ' . Text::_($element . '_AFTER_' . $type) . ' <br/>' . Text::_($element) . '</h2>
+				' . Text::_($element . '_DESC');
+
+				$html .= Text::_($element . '_WHATS_NEW');
+
+				$html .= '</div>
+				<div class="col-12 col-md-4 p-0 d-flex flex-column justify-content-start">
+                        <img width="180" src="https://web-tolk.ru/web_tolk_logo_wide.png">
+                        <p>Joomla Extensions</p>
+                        <p class="btn-group">
+                            <a class="btn btn-sm btn-outline-primary" href="https://web-tolk.ru" target="_blank"> https://web-tolk.ru</a>
+                            <a class="btn btn-sm btn-outline-primary" href="mailto:info@web-tolk.ru"><i class="icon-envelope"></i> info@web-tolk.ru</a>
+                        </p>
+                        <div class="btn-group-vertical mb-3 web-tolk-btn-links" role="group" aria-label="Joomla community links">
+                            <a class="btn btn-danger text-white w-100" href="https://t.me/joomlaru" target="_blank">' . Text::_($element . '_JOOMLARU_TELEGRAM_CHAT') . '</a>
+                            <a class="btn btn-primary text-white w-100" href="https://t.me/webtolkru" target="_blank">' . Text::_($element . '_WEBTOLK_TELEGRAM_CHANNEL') . '</a>
+                        </div>
+                        ' . Text::_($element . "_MAYBE_INTERESTING") . '
+                    </div>
+				';
+				$this->app->enqueueMessage($html, 'info');
+
 				return true;
 			}
 

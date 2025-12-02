@@ -1,7 +1,7 @@
 <?php
 /**
  * @package       WT Content spoiler
- * @version       1.0.1
+ * @version       1.0.2
  * @Author        Sergey Tolkachyov, https://web-tolk.ru
  * @copyright     Copyright (C) 2022 Sergey Tolkachyov
  * @license       GNU/GPL http://www.gnu.org/licenses/gpl-2.0.html
@@ -13,7 +13,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\NoteField;
 use Joomla\CMS\Language\Text;
 
-defined('_JEXEC') or die;
+\defined('_JEXEC') or die;
 
 
 class PlugininfoField extends NoteField
@@ -104,5 +104,3 @@ class PlugininfoField extends NoteField
 	}
 
 }
-
-?>
