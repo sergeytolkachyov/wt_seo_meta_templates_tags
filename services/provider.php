@@ -10,6 +10,7 @@
 \defined('_JEXEC') || die;
 
 use Joomla\CMS\Extension\PluginInterface;
+use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\DI\Container;
 use Joomla\DI\ServiceProviderInterface;
@@ -33,7 +34,9 @@ return new class () implements ServiceProviderInterface {
             function (Container $container) {
                 $subject = $container->get(DispatcherInterface::class);
                 $config = (array)PluginHelper::getPlugin('system', 'wt_seo_meta_templates_tags');
-                return new Wt_seo_meta_templates_tags($subject, $config);
+                 $plugin = new Wt_seo_meta_templates_tags($subject, $config);
+	            $plugin->setApplication(Factory::getApplication());
+	            return $plugin;
             }
         );
     }
